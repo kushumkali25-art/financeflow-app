@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FinanceFlow - Personal Finance Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- =====================================================
+     AUTH SCREEN
+===================================================== -->
+
+<div id="auth-screen">
+
+    <div class="auth-card">
+
+        <div class="auth-logo">
+            <i class="fa-solid fa-wallet"></i>
+        </div>
+
+        <h1>FinanceFlow</h1>
+
+        <p class="subtitle">
+            Smart money management made simple
+        </p>
+
+        <div id="auth-message"></div>
+
+        <!-- SIGNUP -->
+
+        <div id="signup-form">
+
+            <h2>Create Account</h2>
+
+            <label for="signup-name">Full Name</label>
+
+            <input
+                type="text"
+                id="signup-name"
+                placeholder="Enter your name"
+            >
+
+            <label for="signup-email">Email</label>
+
+            <input
+                type="email"
+                id="signup-email"
+                placeholder="Enter your email"
+            >
+
+            <label for="signup-password">Password</label>
+
+            <input
+                type="password"
+                id="signup-password"
+                placeholder="Enter password"
+            >
+
+            <label for="signup-gender">Gender</label>
+
+            <select id="signup-gender">
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+
+            <label for="signup-photo">Profile Photo</label>
+
+            <input
+                type="file"
+                id="signup-photo"
+                accept="image/*"
+            >
+
+            <div class="photo-help">
+                <i class="fa-solid fa-circle-info"></i>
+                JPG, PNG or WEBP. Maximum 2 MB.
+            </div>
+
+            <div
+                id="signup-photo-preview"
+                class="photo-preview hidden"
+            >
+                <img
+                    id="signup-preview-image"
+                    src=""
+                    alt="Profile Preview"
+                >
+
+                <span>Photo Preview</span>
+            </div>
+
+            <button
+                type="button"
+                class="auth-btn"
+                onclick="signup()"
+            >
+                <i class="fa-solid fa-user-plus"></i>
+                Create Account
+            </button>
+
+            <p class="switch-text">
+                Already have an account?
+                <span onclick="showLogin()">Login</span>
+            </p>
+
+        </div>
+
+        <!-- LOGIN -->
+
+        <div
+            id="login-form"
+            class="hidden"
+        >
+
+            <h2>Welcome Back</h2>
+
+            <label for="login-email">Email</label>
+
+            <input
+                type="email"
+                id="login-email"
+                placeholder="Enter email"
+            >
+
+            <label for="login-password">Password</label>
+
+            <input
+                type="password"
+                id="login-password"
+                placeholder="Enter password"
+            >
+
+            <button
+                type="button"
+                class="auth-btn"
+                onclick="login()"
+            >
+                <i class="fa-solid fa-right-to-bracket"></i>
+                Login
+            </button>
+
+            <p class="switch-text">
+                New user?
+                <span onclick="showSignup()">Create Account</span>
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div
+    id="dashboard"
+    class="hidden"
+>
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+
+            <div class="logo-icon">
+                <i class="fa-solid fa-wallet"></i>
+            </div>
+
+            <div>
+                <h1>FinanceFlow</h1>
+                <small>Personal Finance</small>
+            </div>
+
+        </div>
+
+        <div class="sidebar-user">
+
+            <div class="profile-circle">
+
+                <i
+                    id="profile-icon"
+                    class="fa-solid fa-user"
+                ></i>
+
+                <img
+                    id="profile-image"
+                    src=""
+                    alt="Profile"
+                    class="profile-image hidden"
+                >
+
+            </div>
+
+            <div class="sidebar-user-info">
+
+                <h3 id="user-name">User</h3>
+
+                <p id="user-email">
+                    user@email.com
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- MENU -->
+
+        <nav class="sidebar-menu">
+
+            <a href="#dashboard-top" class="active">
+                <i class="fa-solid fa-house"></i>
+                Dashboard
+            </a>
+
+            <a href="#add-transaction-section">
+                <i class="fa-solid fa-plus"></i>
+                Add Transaction
+            </a>
+
+            <a href="#budget-section">
+                <i class="fa-solid fa-wallet"></i>
+                Budget
+            </a>
+
+            <a href="#goal-section">
+                <i class="fa-solid fa-bullseye"></i>
+                Savings Goal
+            </a>
+
+            <a href="#transactions-section">
+                <i class="fa-solid fa-money-bill-transfer"></i>
+                Transactions
+            </a>
+
+            <a href="#users-section">
+                <i class="fa-solid fa-users"></i>
+                Users
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <button
+                type="button"
+                class="sidebar-btn profile-btn"
+                onclick="openProfileModal()"
+            >
+                <i class="fa-solid fa-user-pen"></i>
+                Edit Profile
+            </button>
+
+            <button
+                type="button"
+                class="sidebar-btn theme-btn"
+                onclick="toggleTheme()"
+            >
+                <i
+                    id="theme-icon"
+                    class="fa-solid fa-moon"
+                ></i>
+
+                <span id="theme-text">
+                    Dark Mode
+                </span>
+            </button>
+
+            <button
+                type="button"
+                class="sidebar-btn logout-btn"
+                onclick="logout()"
+            >
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Logout
+            </button>
+
+        </div>
+
+    </aside>
+    <main class="main-content">
+
+        <section
+            id="dashboard-top"
+            class="top-header"
+        >
+
+            <div>
+
+                <p id="welcome-text">
+                    WELCOME BACK
+                </p>
+
+                <h1 id="dashboard-user-name">
+                    User
+                </h1>
+
+                <p class="header-subtitle">
+                    Here's your financial overview
+                </p>
+
+            </div>
+
+            <div class="header-actions">
+
+                <button
+                    type="button"
+                    onclick="openQuickAdd()"
+                    class="quick-add-btn"
+                >
+                    <i class="fa-solid fa-plus"></i>
+                    Quick Add
+                </button>
+
+                <button
+                    type="button"
+                    onclick="switchAccount()"
+                    class="switch-account-btn"
+                >
+                    <i class="fa-solid fa-repeat"></i>
+                    Switch
+                </button>
+
+                <button
+                    type="button"
+                    onclick="logout()"
+                    class="header-logout-btn"
+                >
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Logout
+                </button>
+
+            </div>
+
+        </section>
+
+        <div
+            id="dashboard-notification"
+            class="dashboard-notification"
+        ></div>
+        <div
+            id="money-warning"
+            class="money-warning neutral"
+        >
+
+            <div class="warning-icon">
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+
+            <div>
+
+                <h3 id="warning-title">
+                    Start managing your finances
+                </h3>
+
+                <p id="warning-message">
+                    Add your income and expenses to see your financial status.
+                </p>
+
+            </div>
+
+        </div>
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+
+                <div class="stat-card-top">
+
+                    <div class="stat-icon balance-icon">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+
+                    <span class="card-label">
+                        BALANCE
+                    </span>
+
+                </div>
+
+                <p>Total Balance</p>
+
+                <h2 id="balance">₹0</h2>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-card-top">
+
+                    <div class="stat-icon income-icon">
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+                    </div>
+
+                    <span class="card-label">
+                        INCOME
+                    </span>
+
+                </div>
+
+                <p>Total Income</p>
+
+                <h2 id="income">₹0</h2>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-card-top">
+
+                    <div class="stat-icon expense-icon">
+                        <i class="fa-solid fa-arrow-trend-down"></i>
+                    </div>
+
+                    <span class="card-label">
+                        EXPENSE
+                    </span>
+
+                </div>
+
+                <p>Total Expense</p>
+
+                <h2 id="expense">₹0</h2>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-card-top">
+
+                    <div class="stat-icon saving-icon">
+                        <i class="fa-solid fa-piggy-bank"></i>
+                    </div>
+
+                    <span class="card-label">
+                        SAVINGS
+                    </span>
+
+                </div>
+
+                <p>Total Savings</p>
+
+                <h2 id="savings">₹0</h2>
+
+            </div>
+
+        </section>
+
+        <section class="expense-summary-cards">
+
+            <div class="mini-card">
+
+                <div class="mini-icon">
+                    <i class="fa-solid fa-calendar-day"></i>
+                </div>
+
+                <div>
+
+                    <p>Today's Expense</p>
+
+                    <h2 id="today-expense">₹0</h2>
+
+                    <small id="today-date"></small>
+
+                </div>
+
+            </div>
+
+
+            <div class="mini-card">
+
+                <div class="mini-icon">
+                    <i class="fa-solid fa-calendar-minus"></i>
+                </div>
+
+                <div>
+
+                    <p>Yesterday's Expense</p>
+
+                    <h2 id="yesterday-expense">₹0</h2>
+
+                    <small id="yesterday-date"></small>
+
+                </div>
+
+            </div>
+
+        </section>
+        <section class="dashboard-two-column">
+
+            <div
+                id="budget-section"
+                class="feature-card"
+            >
+
+                <div class="feature-header">
+
+                    <div>
+
+                        <span class="feature-icon">
+                            <i class="fa-solid fa-wallet"></i>
+                        </span>
+
+                        <div>
+                            <h2>Monthly Budget</h2>
+                            <p>Control your monthly spending</p>
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        onclick="editBudget()"
+                        class="small-btn"
+                    >
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+
+                </div>
+
+                <div class="budget-amount-row">
+
+                    <div>
+
+                        <span>Budget</span>
+
+                        <strong id="budget-total">
+                            ₹0
+                        </strong>
+
+                    </div>
+
+                    <div>
+
+                        <span>Spent</span>
+
+                        <strong id="budget-spent">
+                            ₹0
+                        </strong>
+
+                    </div>
+
+                    <div>
+
+                        <span>Remaining</span>
+
+                        <strong id="budget-remaining">
+                            ₹0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+                <div class="progress-container">
+
+                    <div
+                        id="budget-progress"
+                        class="progress-bar"
+                        style="width: 0%"
+                    ></div>
+
+                </div>
+
+                <div class="progress-info">
+
+                    <span id="budget-percent">
+                        0% used
+                    </span>
+
+                    <span id="budget-status">
+                        Set a budget to begin
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="feature-card health-card">
+
+                <div class="feature-header">
+
+                    <div>
+
+                        <span class="feature-icon health-icon">
+                            <i class="fa-solid fa-heart-pulse"></i>
+                        </span>
+
+                        <div>
+                            <h2>Financial Health</h2>
+                            <p>Your financial wellness score</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="health-content">
+
+                    <div class="health-circle">
+
+                        <span id="health-score">
+                            0
+                        </span>
+
+                        <small>/100</small>
+
+                    </div>
+
+                    <div>
+
+                        <h3 id="health-title">
+                            Start tracking
+                        </h3>
+
+                        <p id="health-message">
+                            Add transactions to calculate your financial health.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+        <section
+            id="goal-section"
+            class="feature-card goal-card"
+        >
+
+            <div class="feature-header">
+
+                <div>
+
+                    <span class="feature-icon goal-icon">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </span>
+
+                    <div>
+                        <h2>Savings Goal</h2>
+                        <p id="goal-name-display">
+                            Create a goal for your future
+                        </p>
+                    </div>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="small-btn"
+                    onclick="editGoal()"
+                >
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+
+            </div>
+
+            <div class="goal-content">
+
+                <div class="goal-main">
+
+                    <div class="goal-numbers">
+
+                        <strong id="goal-saved">
+                            ₹0
+                        </strong>
+
+                        <span>
+                            of
+                        </span>
+
+                        <strong id="goal-target">
+                            ₹0
+                        </strong>
+
+                    </div>
+
+                    <div class="progress-container goal-progress-container">
+
+                        <div
+                            id="goal-progress"
+                            class="progress-bar goal-progress"
+                            style="width: 0%"
+                        ></div>
+
+                    </div>
+
+                    <div class="progress-info">
+
+                        <span id="goal-percent">
+                            0%
+                        </span>
+
+                        <span id="goal-remaining">
+                            Set a savings goal
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="goal-message">
+
+                    <i class="fa-solid fa-star"></i>
+
+                    <p id="goal-message">
+                        Every small saving brings you closer to your goal.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section
+            id="add-transaction-section"
+            class="section-card"
+        >
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>
+                        <i class="fa-solid fa-plus-circle"></i>
+                        Add Transaction
+                    </h2>
+
+                    <p>
+                        Record your income or expense
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="transaction-form">
+
+                <div>
+                    <label for="date">Date</label>
+
+                    <input
+                        type="date"
+                        id="date"
+                    >
+                </div>
+
+
+                <div>
+                    <label for="category">Category</label>
+
+                    <input
+                        type="text"
+                        id="category"
+                        placeholder="Food, Travel..."
+                    >
+                </div>
+
+
+                <div>
+                    <label for="amount">Amount</label>
+
+                    <input
+                        type="number"
+                        id="amount"
+                        placeholder="₹ Enter amount"
+                        min="1"
+                    >
+                </div>
+
+
+                <div>
+                    <label for="type">Type</label>
+
+                    <select id="type">
+
+                        <option value="expense">
+                            Expense
+                        </option>
+
+                        <option value="income">
+                            Income
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <div>
+                    <label for="payment-method">
+                        Payment Method
+                    </label>
+
+                    <select id="payment-method">
+
+                        <option value="UPI">UPI</option>
+                        <option value="Cash">Cash</option>
+                        <option value="Debit Card">Debit Card</option>
+                        <option value="Credit Card">Credit Card</option>
+                        <option value="Bank Transfer">Bank Transfer</option>
+                        <option value="Other">Other</option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="note-field">
+
+                    <label for="transaction-note">
+                        Note
+                    </label>
+
+                    <input
+                        type="text"
+                        id="transaction-note"
+                        placeholder="Optional note"
+                    >
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="add-btn"
+                    onclick="addTransaction()"
+                >
+                    <i class="fa-solid fa-plus"></i>
+                    Add Transaction
+                </button>
+
+            </div>
+
+        </section>
+
+        <section class="charts-grid">
+
+            <div class="chart-card">
+
+                <div class="chart-title">
+
+                    <div>
+                        <h2>Expense Overview</h2>
+                        <p>Spending by category</p>
+                    </div>
+
+                    <i class="fa-solid fa-chart-column"></i>
+
+                </div>
+
+                <div class="chart-box">
+                    <canvas id="barChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <div class="chart-card">
+
+                <div class="chart-title">
+
+                    <div>
+                        <h2>Expense Categories</h2>
+                        <p>Where your money goes</p>
+                    </div>
+
+                    <i class="fa-solid fa-chart-pie"></i>
+
+                </div>
+
+                <div class="chart-box">
+                    <canvas id="pieChart"></canvas>
+                </div>
+
+            </div>
+
+        </section>
+        <section class="chart-card monthly-chart-card">
+
+            <div class="chart-title">
+
+                <div>
+                    <h2>Monthly Income vs Expense</h2>
+                    <p>Compare your monthly financial activity</p>
+                </div>
+
+                <i class="fa-solid fa-chart-line"></i>
+
+            </div>
+
+            <div class="monthly-chart-box">
+                <canvas id="monthlyChart"></canvas>
+            </div>
+
+        </section>
+
+        <section
+            id="transactions-section"
+            class="section-card"
+        >
+
+            <div class="section-heading transaction-heading">
+
+                <div>
+                    <h2>
+                        <i class="fa-solid fa-money-bill-transfer"></i>
+                        Recent Transactions
+                    </h2>
+
+                    <p>
+                        Your latest financial activities
+                    </p>
+                </div>
+
+                <input
+                    type="text"
+                    id="transaction-search"
+                    placeholder="Search transactions..."
+                    oninput="searchTransactions()"
+                >
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Date</th>
+                            <th>Category</th>
+                            <th>Type</th>
+                            <th>Payment</th>
+                            <th>Amount</th>
+                            <th>Note</th>
+                            <th>Action</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="transaction-list"></tbody>
+
+                </table>
+
+            </div>
+
+
+            <div class="pagination">
+
+                <button
+                    type="button"
+                    id="previous-btn"
+                    onclick="previousPage()"
+                >
+                    <i class="fa-solid fa-chevron-left"></i>
+                    Previous
+                </button>
+
+                <span id="page-number">
+                    Page 1 of 1
+                </span>
+
+                <button
+                    type="button"
+                    id="next-btn"
+                    onclick="nextPage()"
+                >
+                    Next
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+
+            </div>
+
+        </section>
+        <section class="section-card">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>
+                        <i class="fa-solid fa-calendar-days"></i>
+                        Daily Expense Summary
+                    </h2>
+
+                    <p>
+                        Track your spending day by day
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Date</th>
+                            <th>Total Expense</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="daily-summary"></tbody>
+
+                    <tfoot>
+
+                        <tr>
+                            <th>Grand Total</th>
+                            <th id="grand-total">₹0</th>
+                        </tr>
+
+                    </tfoot>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- CATEGORIES -->
+
+        <section class="section-card">
+
+            <div class="category-header">
+
+                <div>
+                    <h2>
+                        <i class="fa-solid fa-layer-group"></i>
+                        Expense Categories
+                    </h2>
+
+                    <p>
+                        See where most of your money is spent
+                    </p>
+                </div>
+
+                <input
+                    type="text"
+                    id="category-search"
+                    placeholder="Search category..."
+                    oninput="searchCategory()"
+                >
+
+            </div>
+
+            <div
+                id="category-list"
+                class="category-list"
+            ></div>
+
+        </section>
+        <section
+            id="users-section"
+            class="section-card users-section"
+        >
+
+            <div class="users-header">
+
+                <div>
+
+                    <h2>
+                        <i class="fa-solid fa-users"></i>
+                        Registered Users
+                    </h2>
+
+                    <p>
+                        Total Users:
+                        <strong id="total-users">0</strong>
+                    </p>
+
+                </div>
+
+                <input
+                    type="text"
+                    id="user-search"
+                    placeholder="Search user..."
+                    oninput="searchUsers()"
+                >
+
+            </div>
+
+            <div
+                id="users-list"
+                class="users-list"
+            ></div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<div
+    id="profile-modal"
+    class="modal"
+>
+
+    <div class="modal-content">
+
+        <button
+            type="button"
+            class="close-btn"
+            onclick="closeProfileModal()"
+        >
+            ×
+        </button>
+
+        <h2>Edit Profile</h2>
+
+        <div class="edit-photo-section">
+
+            <div
+                id="edit-profile-preview"
+                class="edit-profile-preview"
+            >
+
+                <i
+                    id="edit-profile-icon"
+                    class="fa-solid fa-user"
+                ></i>
+
+                <img
+                    id="edit-profile-image"
+                    src=""
+                    alt="Profile"
+                    class="hidden"
+                >
+
+            </div>
+
+            <p>Profile Photo</p>
+
+        </div>
+
+        <label for="edit-photo">
+            Change Profile Photo
+        </label>
+
+        <input
+            type="file"
+            id="edit-photo"
+            accept="image/*"
+        >
+
+        <div class="photo-actions">
+
+            <button
+                type="button"
+                class="remove-photo-btn"
+                onclick="removeProfilePhoto()"
+            >
+                <i class="fa-solid fa-trash"></i>
+                Remove Photo
+            </button>
+
+        </div>
+
+        <label for="edit-name">Name</label>
+
+        <input
+            type="text"
+            id="edit-name"
+        >
+
+        <label for="edit-email">Email</label>
+
+        <input
+            type="email"
+            id="edit-email"
+        >
+
+        <label for="edit-gender">Gender</label>
+
+        <select id="edit-gender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select>
+
+        <button
+            type="button"
+            class="auth-btn"
+            onclick="saveProfile()"
+        >
+            <i class="fa-solid fa-floppy-disk"></i>
+            Save Profile
+        </button>
+
+    </div>
+
+</div>
+<div
+    id="user-data-modal"
+    class="modal"
+>
+
+    <div class="modal-content">
+
+        <button
+            type="button"
+            class="close-btn"
+            onclick="closeUserDataModal()"
+        >
+            ×
+        </button>
+
+        <h2>User Data</h2>
+
+        <div
+            id="user-data-body"
+            class="user-data-body"
+        ></div>
+
+        <button
+            type="button"
+            class="auth-btn danger-btn"
+            onclick="deleteUserFromModal()"
+        >
+            <i class="fa-solid fa-trash"></i>
+            Delete This User
+        </button>
+
+    </div>
+
+</div>
+<div
+    id="budget-modal"
+    class="modal"
+>
+
+    <div class="modal-content">
+
+        <button
+            type="button"
+            class="close-btn"
+            onclick="closeBudgetModal()"
+        >
+            ×
+        </button>
+
+        <h2>Set Monthly Budget</h2>
+
+        <p class="modal-description">
+            Enter the maximum amount you want to spend this month.
+        </p>
+
+        <label for="budget-input">
+            Monthly Budget
+        </label>
+
+        <input
+            type="number"
+            id="budget-input"
+            min="0"
+            placeholder="₹ 20,000"
+        >
+
+        <button
+            type="button"
+            class="auth-btn"
+            onclick="saveBudget()"
+        >
+            <i class="fa-solid fa-check"></i>
+            Save Budget
+        </button>
+
+    </div>
+
+</div>
+<div
+    id="goal-modal"
+    class="modal"
+>
+
+    <div class="modal-content">
+
+        <button
+            type="button"
+            class="close-btn"
+            onclick="closeGoalModal()"
+        >
+            ×
+        </button>
+
+        <h2>Savings Goal</h2>
+
+        <label for="goal-name">
+            Goal Name
+        </label>
+
+        <input
+            type="text"
+            id="goal-name"
+            placeholder="New Laptop"
+        >
+
+        <label for="goal-target-input">
+            Target Amount
+        </label>
+
+        <input
+            type="number"
+            id="goal-target-input"
+            min="0"
+            placeholder="₹ 50,000"
+        >
+
+        <button
+            type="button"
+            class="auth-btn"
+            onclick="saveGoal()"
+        >
+            <i class="fa-solid fa-bullseye"></i>
+            Save Goal
+        </button>
+
+    </div>
+
+</div>
+<div
+    id="quick-add-modal"
+    class="modal"
+>
+
+    <div class="modal-content">
+
+        <button
+            type="button"
+            class="close-btn"
+            onclick="closeQuickAdd()"
+        >
+            ×
+        </button>
+
+        <h2>Quick Add</h2>
+
+        <p class="modal-description">
+            Quickly add an expense to your dashboard.
+        </p>
+
+        <label for="quick-amount">
+            Amount
+        </label>
+
+        <input
+            type="number"
+            id="quick-amount"
+            min="1"
+            placeholder="₹ Enter amount"
+        >
+
+        <label for="quick-category">
+            Category
+        </label>
+
+        <input
+            type="text"
+            id="quick-category"
+            placeholder="Food, Travel..."
+        >
+
+        <label for="quick-payment">
+            Payment Method
+        </label>
+
+        <select id="quick-payment">
+            <option value="UPI">UPI</option>
+            <option value="Cash">Cash</option>
+            <option value="Debit Card">Debit Card</option>
+            <option value="Credit Card">Credit Card</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <button
+            type="button"
+            class="auth-btn"
+            onclick="saveQuickAdd()"
+        >
+            <i class="fa-solid fa-plus"></i>
+            Add Expense
+        </button>
+
+    </div>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
