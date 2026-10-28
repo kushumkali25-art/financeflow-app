@@ -1,5 +1,4 @@
-
-const API_BASE = "http://localhost:5050/api";
+const API_BASE = "http://localhost:5000/api";
 
 let authToken = localStorage.getItem("financeToken") || null;
 
@@ -38,12 +37,12 @@ async function apiRequest(path, options = {}) {
         });
 
     } catch (error) {
-
-        throw new Error(
-            "Server se connect nahi ho paaya. Kya backend chal raha hai?"
-        );
-
-    }
+    console.error("API connection error:", error);
+    console.error("Requested URL:", API_BASE + path);
+    throw new Error(
+        "Connection failed: " + error.message
+    );
+}
 
     let data = {};
 
@@ -2222,107 +2221,75 @@ function updateHealthScore() {
     `;
 
 }
+
+// Shows only the logged-in user's own card (no other users, no Delete button)
 async function displayUsers() {
-
-    let users = [];
-
-    try {
-
-        const data = await apiRequest("/users");
-
-        users = data.users;
-
-    } catch (error) {
-
-        users = [];
-
-    }
 
     const totalUsers = getElement("total-users");
     const container = getElement("users-list");
 
+    if (!container || !currentUser) {
+        return;
+    }
+
     if (totalUsers) {
-        totalUsers.textContent = users.length;
+        totalUsers.textContent = 1;
     }
 
-    if (!container) {
-        return;
-    }
+    const user = currentUser;
 
-    container.innerHTML = "";
-
-    if (users.length === 0) {
-
-        container.innerHTML = "<p>No users found.</p>";
-
-        return;
-    }
-
-    users.forEach(function (user) {
-
-        const photoHTML = user.photo
-            ? `
-                <img
-                    src="${user.photo}"
-                    alt="${escapeHTML(user.name)}"
-                >
-            `
-            : `
-                <i class="${getGenderIcon(user.gender)}"></i>
-            `;
-
-        container.innerHTML += `
-            <div
-                class="user-card"
-                data-name="${escapeHTML(user.name.toLowerCase())}"
+    const photoHTML = user.photo
+        ? `
+            <img
+                src="${user.photo}"
+                alt="${escapeHTML(user.name)}"
             >
+        `
+        : `
+            <i class="${getGenderIcon(user.gender)}"></i>
+        `;
 
-                <div class="user-card-top">
+    container.innerHTML = `
+        <div
+            class="user-card"
+            data-name="${escapeHTML(user.name.toLowerCase())}"
+        >
 
-                    <div class="user-avatar">
-                        ${photoHTML}
-                    </div>
+            <div class="user-card-top">
 
-                    <div class="user-info">
-
-                        <h3>
-                            ${escapeHTML(user.name)}
-                        </h3>
-
-                        <p>
-                            ${escapeHTML(user.email)}
-                        </p>
-
-                    </div>
-
+                <div class="user-avatar">
+                    ${photoHTML}
                 </div>
 
-                <div class="user-card-actions">
+                <div class="user-info">
 
-                    <button
-                        class="view-data-btn"
-                        onclick="viewUserData('${user.id}')"
-                        type="button"
-                    >
-                        <i class="fa-solid fa-eye"></i>
-                        View Data
-                    </button>
+                    <h3>
+                        ${escapeHTML(user.name)}
+                    </h3>
 
-                    <button
-                        class="delete-user-btn"
-                        onclick="deleteUser('${user.id}')"
-                        type="button"
-                    >
-                        <i class="fa-solid fa-trash"></i>
-                        Delete
-                    </button>
+                    <p>
+                        ${escapeHTML(user.email)}
+                    </p>
 
                 </div>
 
             </div>
-        `;
 
-    });
+            <div class="user-card-actions">
+
+                <button
+                    class="view-data-btn"
+                    onclick="viewUserData('${user.id}')"
+                    type="button"
+                >
+                    <i class="fa-solid fa-eye"></i>
+                    View Data
+                </button>
+
+            </div>
+
+        </div>
+    `;
 
 }
 function searchUsers() {

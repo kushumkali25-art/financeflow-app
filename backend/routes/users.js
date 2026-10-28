@@ -9,8 +9,13 @@ router.use(requireAuth);
 
 
 router.get("/", async (req, res) => {
-    const users = await User.find().select("-password");
-    res.json({ users: users.map((u) => u.toSafeObject()) });
+    const user = await User.findById(req.userId);
+
+    if (!user) {
+        return res.status(404).json({ message: "User not found." });
+    }
+
+    res.json({ users: [user.toSafeObject()] });
 });
 
 router.get("/:id", async (req, res) => {
