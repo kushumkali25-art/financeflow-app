@@ -1,4 +1,4 @@
-const API_BASE = "https://financeflow-app-4uag.onrender.com";
+const API_BASE ="https://financeflow-app-4uag.onrender.com/api";
 
 let authToken = localStorage.getItem("financeToken") || null;
 
