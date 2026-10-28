@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = "https://financeflow-app-4uag.onrender.com";
 
 let authToken = localStorage.getItem("financeToken") || null;
 
@@ -2222,7 +2222,6 @@ function updateHealthScore() {
 
 }
 
-// Shows only the logged-in user's own card (no other users, no Delete button)
 async function displayUsers() {
 
     const totalUsers = getElement("total-users");

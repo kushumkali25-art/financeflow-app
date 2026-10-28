@@ -13,8 +13,9 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(cors());
-
+app.use(cors({
+    origin: "https://finance-frontend-sigma-eight.vercel.app"
+}));
 app.use(express.json({ limit: "5mb" }));
 
 app.use(express.static(path.join(__dirname, "../frontend")));
